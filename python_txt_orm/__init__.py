@@ -1,7 +1,6 @@
 from abc import ABC
 from typing import List, Dict, Any, Callable
 from pathlib import Path
-from pprint import pprint
 
 
 class Model(ABC):
@@ -215,7 +214,6 @@ class TextDB:
         self.actions.append(f)
 
     def select(self, **kwargs):
-        query_list: List[Model] = []
         for i in range(1, self.num_lines + 1):
             model = self.get(i)
             if model is None:
@@ -230,9 +228,7 @@ class TextDB:
                 assertions.append(self.__asciify(value) in getattr(model, k))
 
             if all(assertions):
-                query_list.append(model)
-
-        return query_list
+                yield model
 
     def commit(self) -> None:
         for action in self.actions:
